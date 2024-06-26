@@ -1,0 +1,16 @@
+.login_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: #666;
+
+    .login_content {
+        max-width: 700px;
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 10px;
+        width: 30%;
+    }
+}
