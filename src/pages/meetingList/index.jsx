@@ -1,9 +1,7 @@
-import { Row, Col, Button, Typography, Divider, Table, Tooltip, message } from 'antd'
+import { Row, Col, Button, Typography, Divider, Table, Tooltip, message, Switch } from 'antd'
 import {
     PlusOutlined,
     EyeOutlined,
-    PauseOutlined,
-    CaretRightOutlined,
     CheckOutlined,
     CloseOutlined,
     CheckCircleOutlined
@@ -17,6 +15,7 @@ import JoinModal from '../../components/JoinModal'
 import { getRooms } from '../../api/roomsAPI'
 import { attendMeeting, getUserMeetings } from '../../api/userAPI'
 import { createMeeting, getMeetings, toggleActiveMeeting } from '../../api/meetingAPI'
+import { getReasons } from '../../api/reasonAPI'
 
 const { Title, Text } = Typography
 
@@ -32,42 +31,53 @@ const MeetingList = () => {
     const [pageIndex, setPageIndex] = useState(1);
     const [total, setTotal] = useState(0);
     const [status, setStatus] = useState('')
-
-    if (!user_id) navigate('/dang-nhap')
-
-    useEffect(() => {
-        getRooms().then(response => {
-            setRooms(response.data)
-        })
-    }, [])
+    const [reasons, setReasons] = useState([])
 
     useEffect(() => {
-        const data = {
-            status: status,
-        }
-
-        if (Number(user_id) !== 1) {
-            getUserMeetings(user_id, pageIndex, 10, data).then(response => {
-                setMeetings(response.data.meetings)
-                setTotal(response.data.total)
-            }).catch(err => {
-                if (err.response.status === 401) {
-                    message.error('Token hết hạn', 3)
-                    navigate('/dang-nhap')
-                }
+        if (user_id) {
+            getRooms().then(response => {
+                setRooms(response.data)
+            })
+            getReasons().then(response => {
+                setReasons(response.data)
             })
         } else {
-            getMeetings(pageIndex, 10).then(response => {
-                setMeetings(response.data.meetings)
-                setTotal(response.data.total)
-            }).catch(err => {
-                if (err.response.status === 401) {
-                    message.error('Token hết hạn', 3)
-                    navigate('/dang-nhap')
-                }
-            })
+            navigate('/dang-nhap')
+        }
+    }, [user_id, navigate])
+
+    useEffect(() => {
+        if (user_id) {
+            const data = {
+                status: status,
+            }
+
+            if (Number(user_id) !== 1) {
+                getUserMeetings(user_id, pageIndex, 10, data).then(response => {
+                    setMeetings(response.data.meetings)
+                    setTotal(response.data.total)
+                }).catch(err => {
+                    if (err.response.status === 401) {
+                        message.error('Token hết hạn', 3)
+                        navigate('/dang-nhap')
+                    }
+                })
+            } else {
+                getMeetings(pageIndex, 10).then(response => {
+                    setMeetings(response.data.meetings)
+                    setTotal(response.data.total)
+                }).catch(err => {
+                    if (err.response.status === 401) {
+                        message.error('Token hết hạn', 3)
+                        navigate('/dang-nhap')
+                    }
+                })
+            }
+        } else {
+            navigate('/dang-nhap')
         }
     }, [user_id, pageIndex, status, navigate])
+
 
     const columns = Number(user_id) !== 1 ? [
         {
@@ -118,7 +128,9 @@ const MeetingList = () => {
             key: 'reason',
             width: '30%',
             render: (_value, record, _index) => {
-                return record.reason && `${record.reason}`
+                var reason = reasons.find(item => item.reasonId === record.reasonId)
+                console.log("first", reason)
+                return !reason ? '' : reason.reasonId === 1 ? `Lý do khác (${record.anotherReason})` : reason.title
             }
         },
         {
@@ -216,6 +228,20 @@ const MeetingList = () => {
             }
         },
         {
+            title: 'Trạng thái',
+            dataIndex: '',
+            key: 'delete_action',
+            width: '5%',
+            render: (_value, record, _index) => (
+                <Tooltip title={record.isActive ? 'Tạm ngưng' : 'Kích hoạt'}>
+                    <Switch
+                        checked={record.isActive}
+                        onClick={() => onToggleActive(record.id)}
+                    />
+                </Tooltip>
+            )
+        },
+        {
             title: '',
             dataIndex: '',
             key: 'watch_action',
@@ -223,22 +249,6 @@ const MeetingList = () => {
             render: (_value, record, _index) => (
                 <Tooltip title='Xem'>
                     <Button type='primary' icon={<EyeOutlined />} onClick={() => onClickEdit(record.id)} />
-                </Tooltip>
-            )
-        },
-        {
-            title: '',
-            dataIndex: '',
-            key: 'delete_action',
-            width: '1%',
-            render: (_value, record, _index) => (
-                <Tooltip title={record.isActive ? 'Tạm ngưng' : 'Kích hoạt'}>
-                    <Button
-                        type='primary'
-                        danger={record.isActive}
-                        icon={record.isActive ? <PauseOutlined /> : <CaretRightOutlined />}
-                        onClick={() => onToggleActive(record.id)}
-                    />
                 </Tooltip>
             )
         },
@@ -317,9 +327,8 @@ const MeetingList = () => {
         const now = Date.now()
         const registerTime = new Date(now)
         const formatTime = new Date(registerTime.getTime() - (registerTime.getTimezoneOffset() * 60000))
-            .toISOString()
 
-        if (new Date(record.startTime).getTime() - 15 * 60 * 1000 > formatTime) {
+        if (new Date(new Date(record.startTime).getTime() - 15 * 60 * 1000) > formatTime) {
             return message.warning('Chưa đến thời gian check in cuộc họp', 3)
         }
 
@@ -391,7 +400,8 @@ const MeetingList = () => {
             userId: user_id,
             meetingId: meeting.id,
             status: "Không tham gia",
-            reason: reason,
+            reasonId: reason.reason,
+            anotherReason: reason.anotherReason,
             registerTime: formatTime
         }
 
@@ -480,12 +490,14 @@ const MeetingList = () => {
                 onClose={onCancelAbsent}
                 onSubmit={onSubmitAbsent}
                 meeting={meeting}
+                reasons={reasons}
             />
             <JoinModal
                 open={isOpenJoinModal}
                 onClose={onCancelJoin}
                 onSubmit={onSubmitJoin}
                 meeting={meeting}
+                rooms={rooms}
             />
         </div>
     )

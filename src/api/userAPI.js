@@ -21,4 +21,24 @@ const putInfo = (id, data) => {
     return AxiosClient.put(url + '/' + id + '/info', data)
 }
 
-export { getUserInfo, getUserMeetings, attendMeeting, putInfo }
+const getUsers = (pageIndex, numberInPage) => {
+    const url = API.USER
+    return AxiosClient.get(`${url}/list?pageIndex=${pageIndex}&numberInPage=${numberInPage}`)
+}
+
+const createUser = (data) => {
+    const url = API.USER
+    return AxiosClient.post(url + '/new', data)
+}
+
+const toogleActiveUser = (id) => {
+    const url = API.USER
+    return AxiosClient.put(`${url}/active/${id}`)
+}
+
+const changePassword = (data) => {
+    const url = API.USER
+    return AxiosClient.put(url + '/changepassword', data)
+}
+
+export { getUserInfo, getUserMeetings, attendMeeting, putInfo, getUsers, createUser, toogleActiveUser, changePassword }

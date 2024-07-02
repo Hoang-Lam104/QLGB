@@ -12,5 +12,6 @@ export const API = {
     MEETING: '/meetings',
     DEPARTMENT: '/departments',
     ROOM: '/rooms',
+    REASON: '/reasons',
     LOGOUT: '/logout'
 }

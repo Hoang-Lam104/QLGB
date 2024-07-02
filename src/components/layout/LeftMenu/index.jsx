@@ -1,4 +1,10 @@
-import { AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
+import {
+    AppstoreOutlined,
+    SettingOutlined,
+    UserOutlined,
+    SignatureOutlined,
+    ClusterOutlined
+} from '@ant-design/icons';
 import { Menu } from "antd"
 import './style.scss'
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -8,6 +14,7 @@ const LeftMenu = () => {
     const navigate = useNavigate()
     let location = useLocation()
     const [current, setCurrent] = useState(location.pathname.replace(/\/+$/, ''))
+    const user_id = localStorage.getItem('userId')
 
     useEffect(() => {
         if (location) {
@@ -19,28 +26,44 @@ const LeftMenu = () => {
     }, [location, current]);
 
 
-    const items = [
+    const items = Number(user_id) === 1 ? [
         {
             key: '',
             icon: <AppstoreOutlined />,
             label: 'Danh sách cuộc họp',
         },
         {
-            key: '/',
+            key: '/cai-dat',
             icon: <SettingOutlined />,
-            label: 'Cài đặt Danh mục',
+            label: 'Danh mục',
             children: [
                 {
-                    key: '/cai-dat',
-                    icon: <AppstoreOutlined />,
+                    key: '/nguoi-dung',
+                    icon: <UserOutlined />,
                     label: 'Người dùng',
                 },
-                // {
-                //     key: '/cai-dat/1',
-                //     icon: <AppstoreOutlined />,
-                //     label: 'Danh mục',
-                // },
+                {
+                    key: '/hoi-truong',
+                    icon: <ClusterOutlined />,
+                    label: 'Hội trường',
+                },
+                {
+                    key: '/ly-do',
+                    icon: <SignatureOutlined />,
+                    label: 'Lý do',
+                },
             ]
+        },
+    ] : [
+        {
+            key: '',
+            icon: <AppstoreOutlined />,
+            label: 'Danh sách cuộc họp',
+        },
+        {
+            key: '/cai-dat',
+            icon: <AppstoreOutlined />,
+            label: 'Cài đặt',
         },
     ]
 

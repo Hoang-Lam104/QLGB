@@ -1,21 +1,15 @@
 import { Button, Form, Input, Modal, Radio } from "antd"
 import './style.scss'
-import { useEffect } from "react"
 
-const AbsentModal = ({ open, onClose, onSubmit, meeting }) => {
+const AbsentModal = ({ open, onClose, onSubmit, meeting, reasons }) => {
     const [form] = Form.useForm()
-
-    useEffect(() => {
-        form?.setFieldsValue({
-            reason: 'Nghỉ bù trực',
-            anotherReason: '',
-        })
-    }, [form, meeting])
 
     const onOK = () => {
         const data = form.getFieldsValue()
-        onSubmit(meeting, data.reason)
+        onSubmit(meeting, data)
     }
+
+    reasons.sort((a, b) => b.reasonId - a.reasonId)
 
     return (
         <Modal
@@ -34,12 +28,31 @@ const AbsentModal = ({ open, onClose, onSubmit, meeting }) => {
             className="absent_modal"
         >
             <Form form={form} onFinish={onClose}>
-                <Form.Item name='reason' initialValue="Nghỉ bù trực">
+                <Form.Item 
+                    name='reason' 
+                    label='Lý do'
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Vui lòng chọn Lý do'
+                        }
+                    ]}
+                >
                     <Radio.Group className="radio_container" buttonStyle="solid" >
-                        <Radio.Button className="radio_btn" value="Nghỉ bù trực"> Nghỉ bù trực </Radio.Button>
-                        <Radio.Button className="radio_btn" value="Ở lại khoa làm việc"> Ở lại khoa làm việc </Radio.Button>
-                        <Radio.Button className="radio_btn" value="Khám bệnh ở phòng khám"> Khám bệnh ở phòng khám </Radio.Button>
-                        <Radio.Button className="radio_btn" value="Nghỉ có lý do"> Nghỉ có lý do (Nhập lý do) </Radio.Button>
+                        {reasons.map(reason => {
+                            return (
+                                <Radio.Button
+                                    key={reason.reasonId}
+                                    className="radio_btn"
+                                    value={reason.reasonId}
+                                >
+                                    {reason.title === 'Khác' ?
+                                        'Nghỉ có lý do (Nhập lý do)' :
+                                        reason.title
+                                    }
+                                </Radio.Button>
+                            )
+                        })}
                     </Radio.Group>
                 </Form.Item>
                 <Form.Item noStyle shouldUpdate={(prevValues, currentValues) => prevValues !== currentValues}>
@@ -58,7 +71,8 @@ const AbsentModal = ({ open, onClose, onSubmit, meeting }) => {
                                     maxRows: 6,
                                 }}
                                 style={{ resize: 'none' }}
-                                disabled={getFieldValue('reason') !== 'Nghỉ có lý do'}
+                                disabled={getFieldValue('reason') !== 1}
+                                placeholder="Nhập lý do vắng khác"
                             />
                         </Form.Item>
                     }

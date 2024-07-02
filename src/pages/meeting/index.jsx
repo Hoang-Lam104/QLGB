@@ -2,10 +2,11 @@ import { Col, Divider, Row, Table, Typography, Input } from "antd"
 import './style.scss'
 import { SearchOutlined } from '@ant-design/icons'
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getRooms } from "../../api/roomsAPI";
 import { getMeetingAttendees } from "../../api/meetingAPI";
 import { getDepartments } from "../../api/department";
+import { getReasons } from "../../api/reasonAPI";
 
 const { Title } = Typography;
 
@@ -16,6 +17,11 @@ const Meeting = () => {
     const [departments, setDepartments] = useState([])
     const [pageIndex, setPageIndex] = useState(1)
     const [total, setTotal] = useState(0)
+    const [reasons, setReasons] = useState([])
+
+    const user_id = localStorage.getItem('userId')
+    const navigate = useNavigate()
+    if (!user_id) navigate('/dang-nhap')
 
     useEffect(() => {
         getRooms().then(response => {
@@ -23,6 +29,9 @@ const Meeting = () => {
         })
         getDepartments().then(response => {
             setDepartments(response.data)
+        })
+        getReasons().then(response => {
+            setReasons(response.data)
         })
     }, [])
 
@@ -71,8 +80,9 @@ const Meeting = () => {
             key: 'status',
             width: '30%',
             render: (_value, record, _index) => {
-                if(record.status !== 'Không tham gia') return record.status
-                return `${record.status} (${record.reason})`
+                if (record.status !== 'Không tham gia') return record.status
+                const reason = reasons.find(r => r.reasonId === record.reasonId)
+                return `${record.status} (${reason.reasonId === 1 ? `Lý do khác: ${record.anotherReason}` : reason.title})`
             }
         },
     ]

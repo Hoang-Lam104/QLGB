@@ -7,4 +7,9 @@ const getDepartments = () => {
     return AxiosClient.get(url)
 }
 
-export { getDepartments }
+const createDepartment = (data) => {
+    const url = API.DEPARTMENT
+    return AxiosClient.post(url + '/new', data)
+}
+
+export { getDepartments, createDepartment }

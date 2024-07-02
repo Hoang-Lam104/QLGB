@@ -1,17 +1,9 @@
 import { Button, Form, Modal, Select } from "antd"
 import './style.scss'
-import { useEffect, useState } from "react"
-import { getRooms } from "../../api/roomsAPI"
+import { useEffect } from "react"
 
-const JoinModal = ({ open, onSubmit,  onClose, meeting }) => {
+const JoinModal = ({ open, onSubmit, onClose, meeting, rooms }) => {
     const [form] = Form.useForm()
-    const [rooms, setRooms] = useState([])
-
-    useEffect(() => {
-        getRooms().then(response => {
-            setRooms(response.data)
-        })
-    }, [])
 
     useEffect(() => {
         form?.setFieldsValue({
@@ -22,7 +14,7 @@ const JoinModal = ({ open, onSubmit,  onClose, meeting }) => {
     const onOk = () => {
         const data = form.getFieldsValue()
         onSubmit(meeting, data.room)
-    }   
+    }
 
     return (
         <Modal

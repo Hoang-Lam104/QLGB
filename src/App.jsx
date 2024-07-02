@@ -8,6 +8,9 @@ import Meeting from "./pages/meeting";
 import MeetingList from "./pages/meetingList";
 import Header from "./components/layout/Header";
 import Setting from "./pages/setting";
+import Users from "./pages/users";
+import Rooms from "./pages/rooms";
+import Reasons from "./pages/reasons";
 
 const { Sider, Content } = Layout;
 
@@ -39,6 +42,9 @@ function App() {
               <Route path='/cuoc-hop/:id' element={<Meeting />} />
               <Route path='/dang-nhap' element={<Login />} />
               <Route path='/cai-dat' element={<Setting />} />
+              <Route path='/nguoi-dung' element={<Users />} />
+              <Route path='/hoi-truong' element={<Rooms />} />
+              <Route path='/ly-do' element={<Reasons />} />
             </Routes>
           </Suspense>
         </Content>

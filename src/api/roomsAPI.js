@@ -7,4 +7,14 @@ const getRooms = () => {
     return AxiosClient.get(url)
 }
 
-export { getRooms }
+const toogleActiveRoom = (id) => {
+    const url = API.ROOM
+    return AxiosClient.put(url + '/active/' + id)
+}
+
+const createRoom = (data) => {
+    const url = API.ROOM
+    return AxiosClient.post(url + '/new', data)
+}
+
+export { getRooms, toogleActiveRoom, createRoom }
