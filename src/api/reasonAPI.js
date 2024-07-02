@@ -6,6 +6,11 @@ const getReasons = () => {
     return AxiosClient.get(url)
 }
 
+const getAllReasons = () => {
+    const url = API.REASON
+    return AxiosClient.get(url + '/all')
+}
+
 const toogleActiveReason = (id) => {
     const url = API.REASON
     return AxiosClient.put(url + '/active/' + id)
@@ -16,4 +21,4 @@ const createReason = (data) => {
     return AxiosClient.post(url + '/new', data)
 }
 
-export { getReasons, toogleActiveReason, createReason }
+export { getReasons, toogleActiveReason, createReason, getAllReasons }

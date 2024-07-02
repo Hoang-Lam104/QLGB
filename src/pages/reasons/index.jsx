@@ -1,7 +1,7 @@
 import { Button, Col, Form, Row, Input, Typography, Divider, Table, Switch, message } from 'antd'
 import './style.scss'
 import { useEffect, useState } from 'react'
-import { createReason, getReasons, toogleActiveReason } from '../../api/reasonAPI'
+import { createReason, getAllReasons, toogleActiveReason } from '../../api/reasonAPI'
 import { useNavigate } from 'react-router-dom'
 
 const { Title } = Typography
@@ -14,7 +14,7 @@ const Reasons = () => {
     if (!user_id) navigate('/dang-nhap')
 
     useEffect(() => {
-        getReasons().then(response => {
+        getAllReasons().then(response => {
             setReasons(response.data)
         })
     }, [])
@@ -52,7 +52,7 @@ const Reasons = () => {
 
     const toggleActive = (id) => {
         toogleActiveReason(id).then(async () => {
-            await getReasons().then(response => {
+            await getAllReasons().then(response => {
                 setReasons(response.data)
             })
             message.success('Chuyển đổi trạng thái thành công', 3)
@@ -70,7 +70,7 @@ const Reasons = () => {
         title = title.charAt(0).toUpperCase() + title.slice(1).toLowerCase();
 
         createReason({ title }).then(async () => {
-            await getReasons().then(response => {
+            await getAllReasons().then(response => {
                 setReasons(response.data)
             })
             message.success('Tạo lý do mới thành công', 3)
@@ -96,6 +96,7 @@ const Reasons = () => {
                         <Title level={4}>Thêm mới</Title>
                         <Form
                             form={form}
+                            labelCol={{ span: 4 }}
                             wrapperCol={{ span: 14 }}
                             onFinish={(_) => addNewReason()}
                         >

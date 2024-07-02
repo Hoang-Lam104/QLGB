@@ -1,7 +1,7 @@
 import { Button, Col, Form, Row, Input, Typography, Divider, Table, Switch, message } from 'antd'
 import './style.scss'
 import { useEffect, useState } from 'react'
-import { createRoom, getRooms, toogleActiveRoom } from '../../api/roomsAPI'
+import { createRoom, getAllRooms, toogleActiveRoom } from '../../api/roomsAPI'
 import { useNavigate } from 'react-router-dom'
 
 const { Title } = Typography
@@ -14,7 +14,7 @@ const Rooms = () => {
     if (!user_id) navigate('/dang-nhap')
 
     useEffect(() => {
-        getRooms().then(response => {
+        getAllRooms().then(response => {
             setRooms(response.data)
         })
     }, [])
@@ -51,7 +51,7 @@ const Rooms = () => {
 
     const toogleActive = (id) => {
         toogleActiveRoom(id).then(async () => {
-            await getRooms().then(response => {
+            await getAllRooms().then(response => {
                 setRooms(response.data)
             })
             message.success('Chuyển trạng thái thành công', 3)
@@ -69,7 +69,7 @@ const Rooms = () => {
         name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
         createRoom({ name }).then(async () => {
-            await getRooms().then(response => {
+            await getAllRooms().then(response => {
                 setRooms(response.data)
             })
             message.success('Thêm hội trường thành công', 3)
@@ -94,7 +94,11 @@ const Rooms = () => {
                 <Row >
                     <Col className="reasons_content_col" span={12}>
                         <Title level={4}>Thêm mới</Title>
-                        <Form form={form} labelWrap={{ span: 12 }} wrapperCol={{ span: 12 }}>
+                        <Form
+                            form={form}
+                            labelCol={{ span: 4 }}
+                            wrapperCol={{ span: 12 }}
+                        >
                             <Form.Item
                                 label='Hội trường'
                                 name='name'
@@ -108,7 +112,8 @@ const Rooms = () => {
                             >
                                 <Input placeholder='Nhập hội trường' />
                             </Form.Item>
-                            <Form.Item>
+                            <Form.Item wrapperCol={{ span: 24 }}
+                            >
                                 <Button
                                     type='primary'
                                     onClick={() => addNewRoom()}
