@@ -1,9 +1,9 @@
 import { API } from "../constains/api.constains"
 import AxiosClient from "./AxiosClient"
 
-const getMeetings = (pageIndex, numberInPage) => {
+const getMeetings = (pageIndex, numberInPage, data) => {
     const url = API.MEETING
-    return AxiosClient.get(url + '?pageIndex=' + pageIndex + '&numberInPage=' + numberInPage)
+    return AxiosClient.get(url + '?pageIndex=' + pageIndex + '&numberInPage=' + numberInPage, { params: data })
 }
 
 const createMeeting = (data) => {
@@ -11,9 +11,9 @@ const createMeeting = (data) => {
     return AxiosClient.post(url, data)
 }
 
-const getMeetingAttendees = (id, pageIndex, numberInPage) => {
+const getMeetingAttendees = (id, pageIndex, numberInPage, data) => {
     const url = API.MEETING
-    return AxiosClient.get(`${url}/${id}/attendees?pageIndex=${pageIndex}&numberInPage=${numberInPage}`)
+    return AxiosClient.get(`${url}/${id}/attendees?pageIndex=${pageIndex}&numberInPage=${numberInPage}`, { params: data })
 }
 
 const deleteMeeting = (id) => {

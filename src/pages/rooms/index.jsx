@@ -3,6 +3,7 @@ import './style.scss'
 import { useEffect, useState } from 'react'
 import { createRoom, getAllRooms, toogleActiveRoom } from '../../api/roomsAPI'
 import { useNavigate } from 'react-router-dom'
+import NotFound from '../notFound'
 
 const { Title } = Typography
 
@@ -11,13 +12,16 @@ const Rooms = () => {
     const [rooms, setRooms] = useState([])
     const user_id = localStorage.getItem('userId')
     const navigate = useNavigate()
-    if (!user_id) navigate('/dang-nhap')
 
     useEffect(() => {
-        getAllRooms().then(response => {
-            setRooms(response.data)
-        })
-    }, [])
+        if (user_id) {
+            getAllRooms().then(response => {
+                setRooms(response.data)
+            })
+        } else {
+            navigate('/dang-nhap')
+        }
+    }, [user_id, navigate])
 
     const data = rooms
 
@@ -80,6 +84,8 @@ const Rooms = () => {
         })
     }
 
+    if (Number(user_id) !== 1) return <NotFound />
+
     return (
         <div className='reasons_container'>
             <div className='reasons_header'>
@@ -112,7 +118,11 @@ const Rooms = () => {
                             >
                                 <Input placeholder='Nhập hội trường' />
                             </Form.Item>
-                            <Form.Item wrapperCol={{ span: 24 }}
+                            <Form.Item
+                                wrapperCol={{
+                                    offset: 8,
+                                    span: 16,
+                                }}
                             >
                                 <Button
                                     type='primary'
@@ -131,7 +141,6 @@ const Rooms = () => {
                                     dataSource={data}
                                     columns={columns}
                                     rowKey={(record) => record.id}
-
                                 />
                             </Col>
                         </Row>

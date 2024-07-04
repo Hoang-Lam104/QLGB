@@ -11,6 +11,7 @@ import Setting from "./pages/setting";
 import Users from "./pages/users";
 import Rooms from "./pages/rooms";
 import Reasons from "./pages/reasons";
+import NotFound from "./pages/notFound";
 
 const { Sider, Content } = Layout;
 
@@ -35,7 +36,7 @@ function App() {
             <LeftMenu />
           </Sider>
         }
-        <Content>
+        <Content className="content">
           <Suspense fallback={null}>
             <Routes>
               <Route path='/' element={<MeetingList />} />
@@ -45,6 +46,7 @@ function App() {
               <Route path='/nguoi-dung' element={<Users />} />
               <Route path='/hoi-truong' element={<Rooms />} />
               <Route path='/ly-do' element={<Reasons />} />
+              <Route path='*' element={<NotFound />} />
             </Routes>
           </Suspense>
         </Content>

@@ -3,6 +3,7 @@ import './style.scss'
 import { useEffect, useState } from 'react'
 import { createReason, getAllReasons, toogleActiveReason } from '../../api/reasonAPI'
 import { useNavigate } from 'react-router-dom'
+import NotFound from '../notFound'
 
 const { Title } = Typography
 
@@ -11,13 +12,17 @@ const Reasons = () => {
     const [reasons, setReasons] = useState([])
     const user_id = localStorage.getItem('userId')
     const navigate = useNavigate()
-    if (!user_id) navigate('/dang-nhap')
+
 
     useEffect(() => {
-        getAllReasons().then(response => {
-            setReasons(response.data)
-        })
-    }, [])
+        if (!user_id) {
+            navigate('/dang-nhap')
+        } else {
+            getAllReasons().then(response => {
+                setReasons(response.data)
+            })
+        }
+    }, [user_id, navigate])
 
     const data = reasons.sort((a, b) => b.reasonId - a.reasonId)
 
@@ -80,6 +85,8 @@ const Reasons = () => {
         })
     }
 
+    if (Number(user_id) !== 1) return <NotFound />
+
     return (
         <div className='reasons_container'>
             <div className='reasons_header'>
@@ -111,14 +118,18 @@ const Reasons = () => {
                                     {
                                         whitespace: true,
                                         message: 'Lý do không được để trống'
-
                                     }
                                 ]}
                                 hasFeedback
                             >
                                 <Input placeholder='Nhập lý do' />
                             </Form.Item>
-                            <Form.Item>
+                            <Form.Item
+                                wrapperCol={{
+                                    offset: 8,
+                                    span: 16,
+                                }}
+                            >
                                 <Button
                                     type='primary'
                                     htmlType='submit'

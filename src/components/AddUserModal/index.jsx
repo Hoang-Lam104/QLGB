@@ -51,6 +51,7 @@ const AddUserModal = ({ title, departments, open, onOk, onCancel }) => {
                         { whitespace: true }
                     ]}
                     hasFeedback
+                    normalize={(value, _prevVal, _prevVals) => value.trim()}
                 >
                     <Input placeholder="Nhập tài khoản" />
                 </Form.Item>

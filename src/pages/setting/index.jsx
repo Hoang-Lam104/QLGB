@@ -132,7 +132,12 @@ const Setting = () => {
                             ]}
                         />
                     </Form.Item>
-                    <Form.Item>
+                    <Form.Item
+                        wrapperCol={{
+                            offset: 7,
+                            span: 14,
+                        }}
+                    >
                         <Button
                             type="primary"
                             htmlType="submit"
@@ -187,7 +192,10 @@ const Setting = () => {
                         <Input.Password placeholder="Xác nhận mật khẩu" />
                     </Form.Item>
                     <Form.Item
-                        wrapperCol={{ span: 10 }}
+                        wrapperCol={{
+                            offset: 5,
+                            span: 10,
+                        }}
                     >
                         <Button
                             type="primary"

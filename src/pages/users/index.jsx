@@ -6,6 +6,7 @@ import { getDepartments } from '../../api/department'
 import { PlusOutlined } from '@ant-design/icons'
 import AddUserModal from '../../components/AddUserModal'
 import { useNavigate } from 'react-router-dom'
+import NotFound from '../notFound'
 
 const { Title } = Typography
 
@@ -17,18 +18,21 @@ const Users = () => {
     const [total, setTotal] = useState(0)
     const user_id = localStorage.getItem('userId')
     const navigate = useNavigate()
-    if (!user_id) navigate('/dang-nhap')
+
 
     useEffect(() => {
-        getUsers(pageIndex, 10).then(response => {
-            setUsers(response.data.users)
-            setTotal(response.data.total)
-        })
+        if (!user_id) navigate('/dang-nhap')
+        else {
+            getUsers(pageIndex, 10).then(response => {
+                setUsers(response.data.users)
+                setTotal(response.data.total)
+            })
 
-        getDepartments().then(response => {
-            setDepartments(response.data)
-        })
-    }, [pageIndex])
+            getDepartments().then(response => {
+                setDepartments(response.data)
+            })
+        }
+    }, [pageIndex, user_id, navigate])
 
     const data = users
     const columns = [
@@ -109,6 +113,8 @@ const Users = () => {
     }
 
     const onCancel = () => setIsOpenModal(false)
+
+    if (Number(user_id) !== 1) return <NotFound />
 
     return (
         <div className='users_container'>

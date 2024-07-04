@@ -3,9 +3,10 @@ import {
     SettingOutlined,
     UserOutlined,
     SignatureOutlined,
-    ClusterOutlined
+    ClusterOutlined,
+    PoweroffOutlined
 } from '@ant-design/icons';
-import { Menu } from "antd"
+import { Button, Menu } from "antd"
 import './style.scss'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -73,14 +74,25 @@ const LeftMenu = () => {
     }
 
     return (
-        <Menu
-            className='left_menu'
-            mode="inline"
-            selectedKeys={[current]}
-            items={items}
-            onClick={e => onClick(e)}
-            inlineCollapsed={true}
-        />
+        <div className='side_menu'>
+            <Menu
+                className='left_menu'
+                mode="inline"
+                selectedKeys={[current]}
+                items={items}
+                onClick={e => onClick(e)}
+                collapsed="true"
+            />
+            <Button
+                style={{
+                    borderRadius: '0',
+                    backgroundColor: '#00923f',
+                    color: 'white',
+                    width: '100%'
+                }}
+                icon={<PoweroffOutlined />}
+            />
+        </div>
     )
 }
 

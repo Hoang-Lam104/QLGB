@@ -7,11 +7,16 @@
 
 // LAYOUT
 .layout_container {
-    min-height: 100vh;
-}
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 
-// .layout_content {
-//     margin-top: 64px;
-//     height: calc(100vh - 64px);
-//     min-width: fit-content;
-// }
+    .layout_content {
+        display: flex;
+
+        .content {
+            overflow: auto;
+        }
+    }
+}

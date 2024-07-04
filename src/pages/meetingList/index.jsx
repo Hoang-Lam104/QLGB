@@ -1,4 +1,4 @@
-import { Row, Col, Button, Typography, Divider, Table, Tooltip, message, Switch } from 'antd'
+import { Row, Col, Button, Typography, Divider, Table, Tooltip, message, Switch, Select, DatePicker } from 'antd'
 import {
     PlusOutlined,
     EyeOutlined,
@@ -16,6 +16,7 @@ import { getRooms } from '../../api/roomsAPI'
 import { attendMeeting, getUserMeetings } from '../../api/userAPI'
 import { createMeeting, getMeetings, toggleActiveMeeting } from '../../api/meetingAPI'
 import { getReasons } from '../../api/reasonAPI'
+import { formatDate } from '../../util'
 
 const { Title, Text } = Typography
 
@@ -28,10 +29,14 @@ const MeetingList = () => {
     const [meetings, setMeetings] = useState([])
     const [meeting, setMeeting] = useState({})
     const [rooms, setRooms] = useState([])
+    const [reasons, setReasons] = useState([])
     const [pageIndex, setPageIndex] = useState(1);
     const [total, setTotal] = useState(0);
     const [status, setStatus] = useState('')
-    const [reasons, setReasons] = useState([])
+    const [roomId, setRoomId] = useState(null)
+    const [reasonId, setReasonId] = useState(null)
+    const [startTime, setStartTime] = useState(null)
+    const [endTime, setEndTime] = useState(null)
 
     useEffect(() => {
         if (user_id) {
@@ -50,6 +55,10 @@ const MeetingList = () => {
         if (user_id) {
             const data = {
                 status: status,
+                reasonId: reasonId,
+                roomId: roomId,
+                startTime: startTime,
+                endTime: endTime
             }
 
             if (Number(user_id) !== 1) {
@@ -63,7 +72,7 @@ const MeetingList = () => {
                     }
                 })
             } else {
-                getMeetings(pageIndex, 10).then(response => {
+                getMeetings(pageIndex, 10, { startTime, endTime }).then(response => {
                     setMeetings(response.data.meetings)
                     setTotal(response.data.total)
                 }).catch(err => {
@@ -76,8 +85,7 @@ const MeetingList = () => {
         } else {
             navigate('/dang-nhap')
         }
-    }, [user_id, pageIndex, status, navigate])
-
+    }, [user_id, pageIndex, status, reasonId, roomId, startTime, endTime, navigate])
 
     const columns = Number(user_id) !== 1 ? [
         {
@@ -98,20 +106,14 @@ const MeetingList = () => {
             dataIndex: 'startTime',
             key: 'startTime',
             width: '15%',
-            render: (_value, record, _index) => {
-                const date = new Date(record.startTime)
-                return `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
-            }
+            render: (_value, record, _index) => formatDate(record.startTime)
         },
         {
             title: 'Thời gian kết thúc',
             dataIndex: 'endTime',
             key: 'endTime',
             width: '15%',
-            render: (_value, record, _index) => {
-                const date = new Date(record.endTime)
-                return `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
-            }
+            render: (_value, record, _index) => formatDate(record.endTime)
         },
         {
             title: 'Hội trường',
@@ -129,7 +131,6 @@ const MeetingList = () => {
             width: '30%',
             render: (_value, record, _index) => {
                 var reason = reasons.find(item => item.reasonId === record.reasonId)
-                console.log("first", reason)
                 return !reason ? '' : reason.reasonId === 1 ? `Lý do khác (${record.anotherReason})` : reason.title
             }
         },
@@ -190,7 +191,6 @@ const MeetingList = () => {
                             </>}
                     </div>
                 )
-
             }
         },
     ] : [
@@ -212,20 +212,14 @@ const MeetingList = () => {
             dataIndex: 'startTime',
             key: 'startTime',
             width: '15%',
-            render: (_value, record, _index) => {
-                const date = new Date(record.startTime)
-                return `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
-            }
+            render: (_value, record, _index) => formatDate(record.startTime)
         },
         {
             title: 'Thời gian kết thúc',
             dataIndex: 'endTime',
             key: 'endTime',
             width: '15%',
-            render: (_value, record, _index) => {
-                const date = new Date(record.endTime)
-                return `${date.getHours()}:${date.getMinutes()} ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
-            }
+            render: (_value, record, _index) => formatDate(record.endTime)
         },
         {
             title: 'Trạng thái',
@@ -302,6 +296,14 @@ const MeetingList = () => {
 
     const onClick = (record) => {
         setMeeting(record)
+        const now = Date.now()
+        const registerTime = new Date(now)
+        const formatTime = new Date(registerTime.getTime() - (registerTime.getTimezoneOffset() * 60000))
+
+        if (record.startTime < formatTime) {
+            return message.error('Đã quá thời gian đăng ký cuộc họp')
+        }
+
         if (record.status === 'Tham gia') {
             setIsOpenAbsentModal(true)
         } else {
@@ -344,10 +346,8 @@ const MeetingList = () => {
             meetingTime: formatTime
         }
 
-        const date = {}
-
         attendMeeting(data).then(async () => {
-            await getUserMeetings(user_id, pageIndex, 10, date).then(response => {
+            await getUserMeetings(user_id, pageIndex, 10, { status, reasonId, roomId }).then(response => {
                 setMeetings(response.data.meetings)
                 setTotal(response.data.total)
             })
@@ -356,8 +356,9 @@ const MeetingList = () => {
             if (err.response.status === 401) {
                 message.error('Token hết hạn', 3)
                 navigate('/dang-nhap')
+            } else {
+                message.error('Check in họp thất bại', 3)
             }
-            message.error('Check in họp thất bại', 3)
         })
     }
 
@@ -375,7 +376,7 @@ const MeetingList = () => {
         }
 
         attendMeeting(data).then(async () => {
-            await getUserMeetings(user_id, pageIndex, 10).then(response => {
+            await getUserMeetings(user_id, pageIndex, 10, { status, reasonId, roomId }).then(response => {
                 setMeetings(response.data.meetings)
                 setTotal(response.data.total)
             })
@@ -405,10 +406,8 @@ const MeetingList = () => {
             registerTime: formatTime
         }
 
-        const date = {}
-
         attendMeeting(data).then(async () => {
-            await getUserMeetings(user_id, pageIndex, 10, date).then(response => {
+            await getUserMeetings(user_id, pageIndex, 10, { status, reasonId, roomId }).then(response => {
                 setMeetings(response.data.meetings)
                 setTotal(response.data.total)
             })
@@ -422,6 +421,26 @@ const MeetingList = () => {
         })
 
         setIsOpenAbsentModal(false)
+    }
+
+    const onChangeStartTime = (value) => {
+        if (value === null) return setStartTime(value)
+
+        const startTime = new Date(value)
+        const formatStartTime = new Date(startTime.getTime() - (startTime.getTimezoneOffset() * 60000))
+            .toISOString()
+
+        setStartTime(formatStartTime)
+    }
+
+    const onChangeEndTime = (value) => {
+        if (value === null) return setEndTime(value)
+
+        const endTime = new Date(value)
+        const formatEndTime = new Date(endTime.getTime() - (endTime.getTimezoneOffset() * 60000))
+            .toISOString()
+
+        setEndTime(formatEndTime)
     }
 
     return (
@@ -446,23 +465,116 @@ const MeetingList = () => {
                         </Col>
                     }
                 </Row>
-                {
-                    Number(user_id) !== 1 &&
-                    <Row>
-                        <Col span={10} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Button onClick={() => setStatus('')}>Tất cả</Button>
-                            <Button onClick={() => setStatus('Chưa đăng ký')}>Chưa đăng ký</Button>
-                            <Button onClick={() => setStatus('Tham gia')}>Tham gia</Button>
-                            <Button onClick={() => setStatus('Không tham gia')}>Không tham gia</Button>
-                        </Col>
-                    </Row>
-                }
             </div>
             <Divider dashed></Divider>
             <div className='meeting_list_content'>
-                <Row>
-                    <Text>Bộ lọc: {status ? status : 'Tất cả'}</Text>
+                {
+                    Number(user_id) !== 1 &&
+                    <Row justify='center' align='middle'>
+                        <Col span={2}>
+                            <Text>Bộ lọc:</Text>
+                        </Col>
+                        <Col span={5} style={{ margin: '0 5px' }}>
+                            <Select
+                                className='status_select'
+                                options={[
+                                    {
+                                        value: '',
+                                        label: 'Tất cả'
+                                    },
+
+                                    {
+                                        value: 'Chưa đăng ký',
+                                        label: 'Chưa đăng ký'
+                                    },
+                                    {
+                                        value: 'Tham gia',
+                                        label: 'Tham gia'
+                                    },
+                                    {
+                                        value: 'Không tham gia',
+                                        label: 'Không tham gia'
+                                    }
+                                ]}
+                                onChange={(value) => setStatus(value)}
+                                value={status}
+                                showSearch
+                                style={{ width: '100%' }}
+                            />
+                        </Col>
+                        <Col span={5} style={{ margin: '0 5px' }}>
+                            <Select
+                                placeholder='Chọn Hội trường'
+                                options={rooms.map(room => {
+                                    return {
+                                        key: room.id,
+                                        value: room.id,
+                                        label: room.name,
+                                    }
+                                })}
+                                disabled={status === 'Không tham gia'}
+                                showSearch
+                                value={roomId}
+                                onChange={value => setRoomId(value)}
+                                style={{ width: '100%' }}
+                                allowClear
+                                onClear={() => setRoomId(null)}
+                                optionFilterProp={(input, option) => {
+
+                                }}
+                            />
+                        </Col>
+                        <Col span={5} style={{ margin: '0 5px' }}>
+                            <Select
+                                placeholder='Chọn Lý do vắng'
+                                options={reasons.map(reason => {
+                                    return {
+                                        key: reason.reasonId,
+                                        value: reason.reasonId,
+                                        label: reason.title,
+                                    }
+                                })}
+                                disabled={status === 'Tham gia' || status === 'Chưa đăng ký'}
+                                showSearch
+                                value={reasonId}
+                                onChange={value => setReasonId(value)}
+                                style={{ width: '100%' }}
+                                allowClear
+                                onClear={() => setReasonId(null)}
+                            />
+                        </Col>
+                    </Row>
+                }
+
+                <Row justify='center' align='middle' style={{marginTop: '10px'}}>
+                    <Col span={1}>
+                        <Text>Từ</Text>
+                    </Col>
+                    <Col span={5} style={{ padding: '0 5px' }}>
+                        <DatePicker
+                            showTime
+                            placeholder='Nhập thời gian bắt đầu'
+                            format={'HH:mm DD/MM/YYYY'}
+                            style={{ width: '100%' }}
+                            onChange={(value) => onChangeStartTime(value)}
+                            allowClear
+                        />
+                    </Col>
+                    <Col span={1}>
+                        <Text>Đến</Text>
+                    </Col>
+                    <Col span={5} style={{ padding: '0 5px' }}>
+                        <DatePicker
+                            showTime
+                            placeholder='Nhập thời gian kết thúc'
+                            format={'HH:mm DD/MM/YYYY'}
+                            style={{ width: '100%' }}
+                            onChange={(value) => onChangeEndTime(value)}
+                            allowClear
+                        />
+                    </Col>
                 </Row>
+
                 <Row style={{ marginTop: '24px' }}>
                     <Col span={24}>
                         <Table
