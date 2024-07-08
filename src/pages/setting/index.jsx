@@ -50,9 +50,9 @@ const Setting = () => {
             oldPassword: data.oldPassword,
             newPassword: data.newPassword
         }
-        changePassword(body).then(response => {
+        changePassword(body).then(() => {
             message.success("Thay đổi mật khẩu thành công", 5)
-            navigate('/dang-nhap')
+            form2.resetFields()
         }).catch(error => {
             message.error(error.response.data.message, 5)
         })

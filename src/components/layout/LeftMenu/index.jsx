@@ -63,7 +63,7 @@ const LeftMenu = () => {
         },
         {
             key: '/cai-dat',
-            icon: <AppstoreOutlined />,
+            icon: <UserOutlined />,
             label: 'Cài đặt',
         },
     ]
@@ -86,7 +86,7 @@ const LeftMenu = () => {
             <Button
                 style={{
                     borderRadius: '0',
-                    backgroundColor: '#00923f',
+                    backgroundColor: '#282e46',
                     color: 'white',
                     width: '100%'
                 }}

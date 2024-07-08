@@ -227,7 +227,7 @@ const MeetingList = () => {
             key: 'delete_action',
             width: '5%',
             render: (_value, record, _index) => (
-                <Tooltip title={record.isActive ? 'Tạm ngưng' : 'Kích hoạt'}>
+                <Tooltip title={record.isActive ? 'Mở' : 'Đóng'}>
                     <Switch
                         checked={record.isActive}
                         onClick={() => onToggleActive(record.id)}
@@ -546,7 +546,7 @@ const MeetingList = () => {
                     </Row>
                 }
 
-                <Row justify='center' align='middle' style={{marginTop: '10px'}}>
+                <Row justify='center' align='middle' style={{ marginTop: '10px' }}>
                     <Col span={1}>
                         <Text>Từ</Text>
                     </Col>
