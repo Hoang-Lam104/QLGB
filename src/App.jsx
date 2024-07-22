@@ -12,6 +12,7 @@ import Users from "./pages/users";
 import Rooms from "./pages/rooms";
 import Reasons from "./pages/reasons";
 import NotFound from "./pages/notFound";
+import Departments from "./pages/departments";
 
 const { Sider, Content } = Layout;
 
@@ -46,6 +47,7 @@ function App() {
               <Route path='/nguoi-dung' element={<Users />} />
               <Route path='/hoi-truong' element={<Rooms />} />
               <Route path='/ly-do' element={<Reasons />} />
+              <Route path='/khoa-phong' element={<Departments />} />
               <Route path='*' element={<NotFound />} />
             </Routes>
           </Suspense>

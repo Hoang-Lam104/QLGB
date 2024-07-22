@@ -8,15 +8,15 @@ import {
 } from '@ant-design/icons'
 import './style.scss'
 import { useEffect, useState } from 'react'
-import ModalMeeting from '../../components/AddMeetingModal'
 import { useNavigate } from 'react-router-dom'
-import AbsentModal from '../../components/AbsentModal'
-import JoinModal from '../../components/JoinModal'
 import { getRooms } from '../../api/roomsAPI'
 import { attendMeeting, getUserMeetings } from '../../api/userAPI'
 import { createMeeting, getMeetings, toggleActiveMeeting } from '../../api/meetingAPI'
 import { getReasons } from '../../api/reasonAPI'
 import { formatDate } from '../../util'
+import ModalMeeting from '../../components/AddMeetingModal'
+import AbsentModal from '../../components/AbsentModal'
+import JoinModal from '../../components/JoinModal'
 
 const { Title, Text } = Typography
 
@@ -188,7 +188,8 @@ const MeetingList = () => {
                                         style={{ margin: '0 2px', backgroundColor: 'green', color: 'white' }}
                                     />
                                 </Tooltip>
-                            </>}
+                            </>
+                        }
                     </div>
                 )
             }
@@ -587,6 +588,7 @@ const MeetingList = () => {
                                 current: pageIndex,
                                 onChange: (page) => setPageIndex(page)
                             }}
+                            locale={{ emptyText: 'Chưa có dữ liệu cuộc họp' }}
                         />
                     </Col>
                 </Row>

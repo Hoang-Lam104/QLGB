@@ -4,7 +4,8 @@ import {
     UserOutlined,
     SignatureOutlined,
     ClusterOutlined,
-    PoweroffOutlined
+    PoweroffOutlined,
+    MedicineBoxOutlined
 } from '@ant-design/icons';
 import { Button, Menu } from "antd"
 import './style.scss'
@@ -52,6 +53,11 @@ const LeftMenu = () => {
                     key: '/ly-do',
                     icon: <SignatureOutlined />,
                     label: 'Lý do',
+                },
+                {
+                    key: '/khoa-phong',
+                    icon: <MedicineBoxOutlined />,
+                    label: 'Khoa/Phòng',
                 },
             ]
         },

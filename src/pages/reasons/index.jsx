@@ -69,6 +69,7 @@ const Reasons = () => {
     const addNewReason = () => {
         form.validateFields()
         const data = form.getFieldsValue()
+        if (!data.name) return
 
         var title = data.title.trim()
         title = title.replace(/\s+/g, ' ');

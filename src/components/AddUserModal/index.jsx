@@ -1,8 +1,13 @@
 import { Modal, Button, Form, Input, Select } from "antd"
 import './style.scss'
+import { useEffect } from "react"
 
 const AddUserModal = ({ title, departments, open, onOk, onCancel }) => {
     const [form] = Form.useForm()
+
+    useEffect(() => {
+        form.resetFields()
+    }, [form])
 
     const onSubmit = () => {
         form.validateFields()

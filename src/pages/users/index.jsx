@@ -2,7 +2,7 @@ import { Button, Col, Row, Typography, Divider, Table, Switch, message } from 'a
 import './style.scss'
 import { useEffect, useState } from 'react'
 import { createUser, getUsers, toogleActiveUser } from '../../api/userAPI'
-import { getDepartments } from '../../api/department'
+import { getDepartments } from '../../api/departmentsAPI'
 import { PlusOutlined } from '@ant-design/icons'
 import AddUserModal from '../../components/AddUserModal'
 import { useNavigate } from 'react-router-dom'

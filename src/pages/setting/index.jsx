@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import './style.scss'
 import { SaveOutlined } from "@ant-design/icons"
 import { changePassword, getUserInfo, putInfo } from "../../api/userAPI"
-import { getDepartments } from "../../api/department"
+import { getDepartments } from "../../api/departmentsAPI"
 import { useNavigate } from "react-router-dom"
 
 const Setting = () => {

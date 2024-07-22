@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getRooms } from "../../api/roomsAPI";
 import { getMeetingAttendees } from "../../api/meetingAPI";
-import { getDepartments } from "../../api/department";
+import { getDepartments } from "../../api/departmentsAPI";
 import { getReasons } from "../../api/reasonAPI";
 
 const { Title, Text } = Typography;
@@ -42,7 +42,7 @@ const Meeting = () => {
                 setReasons(response.data)
             })
         }
-    }, [user_id, status, reasonId, roomId, navigate])
+    }, [user_id, navigate])
 
     useEffect(() => {
         const data = {

@@ -1,29 +1,29 @@
 import { Button, Col, Form, Row, Input, Typography, Divider, Table, Switch, message } from 'antd'
 import './style.scss'
 import { useEffect, useState } from 'react'
-import { createRoom, getAllRooms, toogleActiveRoom } from '../../api/roomsAPI'
+import { createDepartment, getAllDepartments, toogleActiveDepartment } from '../../api/departmentsAPI'
 import { useNavigate } from 'react-router-dom'
 import NotFound from '../notFound'
 
 const { Title } = Typography
 
-const Rooms = () => {
+const Departments = () => {
     const [form] = Form.useForm()
-    const [rooms, setRooms] = useState([])
+    const [departments, setDepartments] = useState([])
     const user_id = localStorage.getItem('userId')
     const navigate = useNavigate()
 
     useEffect(() => {
         if (user_id) {
-            getAllRooms().then(response => {
-                setRooms(response.data)
+            getAllDepartments().then(response => {
+                setDepartments(response.data)
             })
         } else {
             navigate('/dang-nhap')
         }
     }, [user_id, navigate])
 
-    const data = rooms
+    const data = departments
 
     const columns = [
         {
@@ -34,7 +34,7 @@ const Rooms = () => {
             render: (_value, _record, index) => index + 1
         },
         {
-            title: 'Hội trường',
+            title: 'Khoa/Phòng',
             dataIndex: 'name',
             key: 'name',
             width: '70%'
@@ -54,9 +54,9 @@ const Rooms = () => {
     ]
 
     const toogleActive = (id) => {
-        toogleActiveRoom(id).then(async () => {
-            await getAllRooms().then(response => {
-                setRooms(response.data)
+        toogleActiveDepartment(id).then(async () => {
+            await getAllDepartments().then(response => {
+                setDepartments(response.data)
             })
             message.success('Chuyển trạng thái thành công', 3)
         }).catch(err => {
@@ -64,7 +64,7 @@ const Rooms = () => {
         })
     }
 
-    const addNewRoom = () => {
+    const addNewDepartment = () => {
         form.validateFields()
         const data = form.getFieldsValue()
         if (!data.name) return
@@ -73,9 +73,9 @@ const Rooms = () => {
         name = name.replace(/\s+/g, ' ');
         name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
-        createRoom({ name }).then(async () => {
-            await getAllRooms().then(response => {
-                setRooms(response.data)
+        createDepartment({ name }).then(async () => {
+            await getAllDepartments().then(response => {
+                setDepartments(response.data)
             })
             message.success('Thêm hội trường thành công', 3)
             form.resetFields();
@@ -92,7 +92,7 @@ const Rooms = () => {
             <div className='reasons_header'>
                 <Row>
                     <Col>
-                        <Title level={1}>Danh mục Hội trường</Title>
+                        <Title level={1}>Danh mục Khoa/Phòng</Title>
                     </Col>
                 </Row>
             </div>
@@ -107,17 +107,17 @@ const Rooms = () => {
                             wrapperCol={{ span: 12 }}
                         >
                             <Form.Item
-                                label='Hội trường'
+                                label='Khoa/Phòng'
                                 name='name'
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Vui lòng nhập Hội trường mới'
+                                        message: 'Vui lòng nhập Khoa/Phòng mới'
                                     },
                                     { whitespace: true }
                                 ]}
                             >
-                                <Input placeholder='Nhập hội trường' />
+                                <Input placeholder='Nhập Khoa/Phòng' />
                             </Form.Item>
                             <Form.Item
                                 wrapperCol={{
@@ -127,7 +127,7 @@ const Rooms = () => {
                             >
                                 <Button
                                     type='primary'
-                                    onClick={() => addNewRoom()}
+                                    onClick={() => addNewDepartment()}
                                 >
                                     Thêm
                                 </Button>
@@ -152,4 +152,4 @@ const Rooms = () => {
     )
 }
 
-export default Rooms
+export default Departments
