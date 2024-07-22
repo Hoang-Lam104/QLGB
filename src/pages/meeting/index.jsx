@@ -110,7 +110,7 @@ const Meeting = () => {
             render: (_value, record, _index) => {
                 if (record.status !== 'Không tham gia') return record.status
                 const reason = reasons.find(r => r.reasonId === record.reasonId)
-                return `${record.status} (${reason.reasonId === 1 ? `Lý do khác: ${record.anotherReason}` : reason.title})`
+                return `${record.status} (${reason.reasonId === 1 ? `Lý do khác: ${record.anotherReason}` : reason.name})`
             }
         },
     ]
@@ -194,7 +194,7 @@ const Meeting = () => {
                                 return {
                                     key: reason.reasonId,
                                     value: reason.reasonId,
-                                    label: reason.title,
+                                    label: reason.name,
                                 }
                             })}
                             disabled={status === 'Tham gia' || status === 'Chưa đăng ký'}

@@ -46,9 +46,9 @@ const AbsentModal = ({ open, onClose, onSubmit, meeting, reasons }) => {
                                     className="radio_btn"
                                     value={reason.reasonId}
                                 >
-                                    {reason.title === 'Khác' ?
+                                    {reason.name === 'Khác' ?
                                         'Nghỉ có lý do (Nhập lý do)' :
-                                        reason.title
+                                        reason.name
                                     }
                                 </Radio.Button>
                             )

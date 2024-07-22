@@ -71,11 +71,11 @@ const Reasons = () => {
         const data = form.getFieldsValue()
         if (!data.name) return
 
-        var title = data.title.trim()
-        title = title.replace(/\s+/g, ' ');
-        title = title.charAt(0).toUpperCase() + title.slice(1).toLowerCase();
+        var name = data.name.trim()
+        name = name.replace(/\s+/g, ' ');
+        name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
-        createReason({ title }).then(async () => {
+        createReason({ name }).then(async () => {
             await getAllReasons().then(response => {
                 setReasons(response.data)
             })

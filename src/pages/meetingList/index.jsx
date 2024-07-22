@@ -131,7 +131,7 @@ const MeetingList = () => {
             width: '30%',
             render: (_value, record, _index) => {
                 var reason = reasons.find(item => item.reasonId === record.reasonId)
-                return !reason ? '' : reason.reasonId === 1 ? `Lý do khác (${record.anotherReason})` : reason.title
+                return !reason ? '' : reason.reasonId === 1 ? `Lý do khác (${record.anotherReason})` : reason.name
             }
         },
         {
@@ -532,7 +532,7 @@ const MeetingList = () => {
                                     return {
                                         key: reason.reasonId,
                                         value: reason.reasonId,
-                                        label: reason.title,
+                                        label: reason.name,
                                     }
                                 })}
                                 disabled={status === 'Tham gia' || status === 'Chưa đăng ký'}
