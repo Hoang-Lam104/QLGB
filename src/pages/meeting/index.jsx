@@ -110,7 +110,7 @@ const Meeting = () => {
             render: (_value, record, _index) => {
                 if (record.status !== 'Không tham gia') return record.status
                 const reason = reasons.find(r => r.reasonId === record.reasonId)
-                return `${record.status} (${reason.reasonId === 1 ? `Lý do khác: ${record.anotherReason}` : reason.name})`
+                return `${record.status} (${reason.id === 1 ? `Lý do khác: ${record.anotherReason}` : reason.name})`
             }
         },
     ]
@@ -137,10 +137,10 @@ const Meeting = () => {
             <div className="report_content">
 
                 <Row align='middle'>
-                    <Col span={2}>
+                    <Col xl={2}>
                         <Text>Bộ lọc:</Text>
                     </Col>
-                    <Col span={3} style={{ padding: '0 5px' }}>
+                    <Col xl={3} style={{ padding: '0 5px' }}>
                         <Select
                             className='status_select'
                             options={[
@@ -168,7 +168,7 @@ const Meeting = () => {
                             style={{ width: '100%' }}
                         />
                     </Col>
-                    <Col span={4} style={{ padding: '0 5px' }}>
+                    <Col xl={4} style={{ padding: '0 5px' }}>
                         <Select
                             placeholder='Chọn Hội trường'
                             options={rooms.map(room => {
@@ -187,13 +187,13 @@ const Meeting = () => {
                             onClear={() => setRoomId(null)}
                         />
                     </Col>
-                    <Col span={4} style={{ padding: '0 5px' }}>
+                    <Col xl={4} style={{ padding: '0 5px' }}>
                         <Select
                             placeholder='Chọn Lý do vắng'
                             options={reasons.map(reason => {
                                 return {
-                                    key: reason.reasonId,
-                                    value: reason.reasonId,
+                                    key: reason.id,
+                                    value: reason.id,
                                     label: reason.name,
                                 }
                             })}
@@ -206,7 +206,7 @@ const Meeting = () => {
                             onClear={() => setReasonId(null)}
                         />
                     </Col>
-                    <Col span={4} style={{ padding: '0 5px' }}>
+                    <Col xl={4} style={{ padding: '0 5px' }}>
                         <Select
                             placeholder='Chọn Khoa/Phòng'
                             options={departments.map(item => {
@@ -224,7 +224,7 @@ const Meeting = () => {
                             onClear={() => setDepartmentId(null)}
                         />
                     </Col>
-                    <Col span={4} style={{ padding: '0 5px' }}>
+                    <Col xl={4} style={{ padding: '0 5px' }}>
                         <Select
                             placeholder='Chọn Chức vụ'
                             options={[
@@ -263,8 +263,8 @@ const Meeting = () => {
                     </Col>
                 </Row>
                 <Row justify='space-between' style={{ marginTop: '10px' }}>
-                    <Col span={8}></Col>
-                    <Col span={6} >
+                    <Col xl={8}></Col>
+                    <Col xl={6} >
                         <Input
                             prefix={<SearchOutlined />}
                             placeholder="Tìm kiếm ..."
@@ -273,7 +273,7 @@ const Meeting = () => {
                     </Col>
                 </Row>
                 <Row style={{ marginTop: '20px' }}>
-                    <Col span={24}>
+                    <Col xl={24}>
                         <Table
                             columns={columns}
                             dataSource={dataSource}

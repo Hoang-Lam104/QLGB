@@ -1,9 +1,15 @@
 import { DatePicker, Modal, Button, Form, Input, Select } from "antd"
+import { useEffect } from "react"
 
 const ModalMeeting = ({ title, open, onOk, onCancel }) => {
     const [form] = Form.useForm()
 
+    useEffect(() => {
+        form.resetFields()
+    }, [form, open])
+
     const onSubmit = () => {
+        form.validateFields()
         const data = form.getFieldsValue()
         const startTime = new Date(data.startTime)
         const formatStartTime = new Date(startTime.getTime() - (startTime.getTimezoneOffset() * 60000))
@@ -32,10 +38,30 @@ const ModalMeeting = ({ title, open, onOk, onCancel }) => {
             ]}
         >
             <Form form={form} style={{ padding: '10px' }}>
-                <Form.Item label='Tiêu đề' name='title'>
-                    <Input />
+                <Form.Item
+                    label='Tiêu đề'
+                    name='title'
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Nhập tiêu đề',
+                        },
+                        { whitespace: true }
+                    ]}
+                    hasFeedback
+                >
+                    <Input placeholder="Nhập tiêu đề" />
                 </Form.Item>
-                <Form.Item label='Thời gian bắt đầu' name='startTime'>
+                <Form.Item
+                    label='Thời gian bắt đầu'
+                    name='startTime'
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Chọn thời gian bắt đầu',
+                        },
+                    ]}
+                >
                     <DatePicker
                         showTime={{
                             format: 'HH:mm',
@@ -44,7 +70,25 @@ const ModalMeeting = ({ title, open, onOk, onCancel }) => {
                         format={'HH:mm DD/MM/YYYY'}
                     />
                 </Form.Item>
-                <Form.Item label='Thời gian kết thúc' name='endTime'>
+                <Form.Item
+                    label='Thời gian kết thúc'
+                    name='endTime'
+                    dependencies={['startTime']}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Chọn thời gian kết thúc',
+                        },
+                        ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                if (!value || getFieldValue('startTime') < value) {
+                                    return Promise.resolve()
+                                }
+                                return Promise.reject('Thời gian kết thúc phải lớn hơn thời gian bắt đầu')
+                            }
+                        })
+                    ]}
+                >
                     <DatePicker
                         showTime={{
                             format: 'HH:mm',

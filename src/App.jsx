@@ -33,7 +33,7 @@ function App() {
       <Layout className="layout_content">
         {
           pathname !== '/dang-nhap' &&
-          <Sider>
+          <Sider className="sider">
             <LeftMenu />
           </Sider>
         }

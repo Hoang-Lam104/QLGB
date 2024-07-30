@@ -7,7 +7,7 @@ const AddUserModal = ({ title, departments, open, onOk, onCancel }) => {
 
     useEffect(() => {
         form.resetFields()
-    }, [form])
+    }, [form, open])
 
     const onSubmit = () => {
         form.validateFields()
@@ -58,7 +58,10 @@ const AddUserModal = ({ title, departments, open, onOk, onCancel }) => {
                     hasFeedback
                     normalize={(value, _prevVal, _prevVals) => value.trim()}
                 >
-                    <Input placeholder="Nhập tài khoản" />
+                    <Input
+                        placeholder="Nhập tài khoản"
+                        onInput={e => e.target.value = e.target.value.toUpperCase()}
+                    />
                 </Form.Item>
                 <Form.Item
                     label='Mật khẩu'
@@ -153,8 +156,12 @@ const AddUserModal = ({ title, departments, open, onOk, onCancel }) => {
                                 value: 'Dược sĩ',
                             },
                             {
-                                label: 'Trưởng khoa',
-                                value: 'Trưởng khoa',
+                                label: 'Phó khoa/phòng',
+                                value: 'Phó khoa/phòng',
+                            },
+                            {
+                                label: 'Trưởng khoa/phòng',
+                                value: 'Trưởng khoa/phòng',
                             },
                         ]}
                     />

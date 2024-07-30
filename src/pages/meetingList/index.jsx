@@ -131,7 +131,7 @@ const MeetingList = () => {
             width: '30%',
             render: (_value, record, _index) => {
                 var reason = reasons.find(item => item.reasonId === record.reasonId)
-                return !reason ? '' : reason.reasonId === 1 ? `Lý do khác (${record.anotherReason})` : reason.name
+                return !reason ? '' : reason.id === 1 ? `Lý do khác (${record.anotherReason})` : reason.name
             }
         },
         {
@@ -448,12 +448,12 @@ const MeetingList = () => {
         <div className='meeting_list_container'>
             <div className="report_header">
                 <Row justify='space-between'>
-                    <Col xs={20}>
+                    <Col xl={20} xs={24}>
                         <Title level={1}>Danh sách cuộc họp</Title>
                     </Col>
                     {
                         Number(user_id) === 1 &&
-                        <Col xs={4}>
+                        <Col xl={4} xs={12}>
                             <Button
                                 type="primary"
                                 shape="round"
@@ -472,10 +472,10 @@ const MeetingList = () => {
                 {
                     Number(user_id) !== 1 &&
                     <Row justify='center' align='middle'>
-                        <Col span={2}>
+                        <Col xl={2} xs={6}>
                             <Text>Bộ lọc:</Text>
                         </Col>
-                        <Col span={5} style={{ margin: '0 5px' }}>
+                        <Col xl={5} xs={11} style={{ margin: '0 5px' }}>
                             <Select
                                 className='status_select'
                                 options={[
@@ -503,7 +503,7 @@ const MeetingList = () => {
                                 style={{ width: '100%' }}
                             />
                         </Col>
-                        <Col span={5} style={{ margin: '0 5px' }}>
+                        <Col xl={5} xs={11} style={{ margin: '0 5px' }}>
                             <Select
                                 placeholder='Chọn Hội trường'
                                 options={rooms.map(room => {
@@ -520,18 +520,15 @@ const MeetingList = () => {
                                 style={{ width: '100%' }}
                                 allowClear
                                 onClear={() => setRoomId(null)}
-                                optionFilterProp={(input, option) => {
-
-                                }}
                             />
                         </Col>
-                        <Col span={5} style={{ margin: '0 5px' }}>
+                        <Col xl={5} xs={11} style={{ margin: '0 5px' }}>
                             <Select
                                 placeholder='Chọn Lý do vắng'
                                 options={reasons.map(reason => {
                                     return {
-                                        key: reason.reasonId,
-                                        value: reason.reasonId,
+                                        key: reason.id,
+                                        value: reason.id,
                                         label: reason.name,
                                     }
                                 })}
@@ -548,10 +545,10 @@ const MeetingList = () => {
                 }
 
                 <Row justify='center' align='middle' style={{ marginTop: '10px' }}>
-                    <Col span={1}>
+                    <Col xl={1} xs={2}>
                         <Text>Từ</Text>
                     </Col>
-                    <Col span={5} style={{ padding: '0 5px' }}>
+                    <Col xl={5} xs={10} style={{ padding: '0 5px' }}>
                         <DatePicker
                             showTime
                             placeholder='Nhập thời gian bắt đầu'
@@ -561,10 +558,10 @@ const MeetingList = () => {
                             allowClear
                         />
                     </Col>
-                    <Col span={1}>
+                    <Col xl={1} xs={2}>
                         <Text>Đến</Text>
                     </Col>
-                    <Col span={5} style={{ padding: '0 5px' }}>
+                    <Col xl={5} xs={10} style={{ padding: '0 5px' }}>
                         <DatePicker
                             showTime
                             placeholder='Nhập thời gian kết thúc'
@@ -577,7 +574,7 @@ const MeetingList = () => {
                 </Row>
 
                 <Row style={{ marginTop: '24px' }}>
-                    <Col span={24}>
+                    <Col xl={24}>
                         <Table
                             columns={columns}
                             dataSource={meetings}

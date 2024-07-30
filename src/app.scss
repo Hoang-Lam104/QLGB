@@ -20,3 +20,9 @@
         }
     }
 }
+
+@media only screen and (max-width: 600px) {
+    .sider {
+        display: none;
+    }
+}

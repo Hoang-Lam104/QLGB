@@ -126,8 +126,12 @@ const Setting = () => {
                                     value: 'Dược sĩ',
                                 },
                                 {
-                                    label: 'Trưởng khoa',
-                                    value: 'Trưởng khoa',
+                                    label: 'Phó khoa/phòng',
+                                    value: 'Phó khoa/phòng',
+                                },
+                                {
+                                    label: 'Trưởng khoa/phòng',
+                                    value: 'Trưởng khoa/phòng',
                                 },
                             ]}
                         />

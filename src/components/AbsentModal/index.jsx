@@ -9,7 +9,7 @@ const AbsentModal = ({ open, onClose, onSubmit, meeting, reasons }) => {
         onSubmit(meeting, data)
     }
 
-    reasons.sort((a, b) => b.reasonId - a.reasonId)
+    reasons.sort((a, b) => b.id - a.id)
 
     return (
         <Modal
@@ -42,9 +42,9 @@ const AbsentModal = ({ open, onClose, onSubmit, meeting, reasons }) => {
                         {reasons.map(reason => {
                             return (
                                 <Radio.Button
-                                    key={reason.reasonId}
+                                    key={reason.id}
                                     className="radio_btn"
-                                    value={reason.reasonId}
+                                    value={reason.id}
                                 >
                                     {reason.name === 'Khác' ?
                                         'Nghỉ có lý do (Nhập lý do)' :

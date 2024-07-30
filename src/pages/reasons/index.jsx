@@ -24,7 +24,7 @@ const Reasons = () => {
         }
     }, [user_id, navigate])
 
-    const data = reasons.sort((a, b) => b.reasonId - a.reasonId)
+    const data = reasons.sort((a, b) => b.id - a.id)
 
     const columns = [
         {
@@ -36,8 +36,8 @@ const Reasons = () => {
         },
         {
             title: 'Lý do',
-            dataIndex: 'title',
-            key: 'title',
+            dataIndex: 'name',
+            key: 'name',
             width: '70%'
         },
         {
@@ -47,9 +47,9 @@ const Reasons = () => {
             width: '20%',
             render: (_value, record, _index) => (
                 <Switch
-                    disabled={record.reasonId === 1}
+                    disabled={record.id === 1}
                     checked={record.isActive}
-                    onChange={() => toggleActive(record.reasonId)}
+                    onChange={() => toggleActive(record.id)}
                 />
             )
         },
@@ -100,7 +100,7 @@ const Reasons = () => {
             <Divider dashed />
             <div className='reasons_content'>
                 <Row >
-                    <Col className="reasons_content_col" span={12}>
+                    <Col className="reasons_content_col" xl={12}>
                         <Title level={4}>Thêm mới</Title>
                         <Form
                             form={form}
@@ -140,14 +140,14 @@ const Reasons = () => {
                             </Form.Item>
                         </Form>
                     </Col>
-                    <Col className="reasons_content_col" span={12}>
+                    <Col className="reasons_content_col" xl={12}>
                         <Title level={4}>Danh sách</Title>
                         <Row>
-                            <Col span={24}>
+                            <Col xl={24}>
                                 <Table
                                     dataSource={data}
                                     columns={columns}
-                                    rowKey={(record) => record.reasonId}
+                                    rowKey={(record) => record.id}
                                 />
                             </Col>
                         </Row>

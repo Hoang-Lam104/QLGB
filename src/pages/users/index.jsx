@@ -141,7 +141,7 @@ const Users = () => {
             <Divider dashed />
             <div className='users_content'>
                 <Row>
-                    <Col span={24}>
+                    <Col xl={24}>
                         <Table
                             dataSource={data}
                             columns={columns}

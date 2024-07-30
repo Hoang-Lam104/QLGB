@@ -99,7 +99,7 @@ const Rooms = () => {
             <Divider dashed />
             <div className='reasons_content'>
                 <Row >
-                    <Col className="reasons_content_col" span={12}>
+                    <Col className="reasons_content_col" xl={12}>
                         <Title level={4}>Thêm mới</Title>
                         <Form
                             form={form}
@@ -134,10 +134,10 @@ const Rooms = () => {
                             </Form.Item>
                         </Form>
                     </Col>
-                    <Col className="reasons_content_col" span={12}>
+                    <Col className="reasons_content_col" xl={12}>
                         <Title level={4}>Danh sách</Title>
                         <Row>
-                            <Col span={24}>
+                            <Col xl={24}>
                                 <Table
                                     dataSource={data}
                                     columns={columns}
